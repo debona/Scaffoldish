@@ -1,5 +1,5 @@
 Gem::Specification.new do |s|
-  s.name        = 'scaffold-ish'
+  s.name        = 'scaffoldish'
   s.summary     = 'Universal scaffolder super powa for everyone!'
   s.description = "Brings Rails-ish scaffolding super powa for every developpers, no matter they don't code with blessed RoR."
   s.authors     = ['Thomas DE BONA']

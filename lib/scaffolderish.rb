@@ -1,2 +1,0 @@
-
-require 'scaffolder/application'

@@ -1,7 +1,7 @@
 require 'singleton'
 require 'logger'
 
-module Scaffolderish
+module Scaffoldish
 
   class Application
 
