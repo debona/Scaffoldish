@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'scaffolder'
+
+# TODO include the logger method?
+
+Scaffolder::Application.instance.run(*ARGV)
