@@ -15,7 +15,7 @@ module Scaffolderish
     end
 
     def run(command_file, *parameters)
-
+      puts "Hello world, I'm scaffoldish!"
     rescue Exception => e
       logger.error e
     end
