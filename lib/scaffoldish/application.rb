@@ -7,6 +7,9 @@ module Scaffoldish
 
     include Singleton
 
+    CONFIG_FILE_NAME = "#{Dir.pwd}/scaffoldish/conf.rb"
+    TEMPLATES_ROOT = "#{Dir.pwd}/scaffoldish/templates"
+
     attr_reader :logger
 
     def initialize
@@ -14,8 +17,13 @@ module Scaffoldish
       @logger.level = Logger::WARN
     end
 
-    def run(command_file, *parameters)
-      puts "Hello world, I'm scaffoldish!"
+    def run(*args)
+      scaffold = args.shift
+
+      # Parameters checking
+      raise OptionParser::MissingArgument.new("$1 => scaffold_name") if scaffold.nil?
+
+      puts "Hello world, I'm scaffoldish! Run #{scaffold}"
     rescue Exception => e
       logger.error e
     end
