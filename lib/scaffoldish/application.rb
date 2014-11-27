@@ -2,6 +2,7 @@ require 'singleton'
 require 'logger'
 
 require 'scaffoldish/scaffold'
+require 'scaffoldish/dsl/conf'
 
 module Scaffoldish
 
@@ -12,18 +13,15 @@ module Scaffoldish
     CONFIG_FILE_NAME = "#{Dir.pwd}/scaffoldish/conf.rb"
     TEMPLATES_ROOT = "#{Dir.pwd}/scaffoldish/templates"
 
-    attr_reader :logger, :scaffolds
+    attr_reader :logger, :scaffolds, :workspace
 
     def initialize
       @logger = Logger.new(STDERR) # TODO: make a module with that
       @logger.level = Logger::WARN
 
       @scaffolds = {}
-
-      Kernel.send(:define_method, :scaffold) do |name, &block|
-        new_scaffold = Scaffold.new(name.to_sym, &block)
-        Application.instance.register_scaffold(new_scaffold)
-      end
+      @workspace = Object.new
+      @workspace.extend(DSL::Conf)
     end
 
     def register_scaffold(scaffold)

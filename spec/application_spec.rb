@@ -22,22 +22,8 @@ describe Scaffoldish::Application do
     end
 
     its(:logger) { should be_a Logger }
-
-    describe 'its side-effects' do
-      describe Kernel do
-        it 'it should have the method :scaffold' do
-          Kernel.methods.should include :scaffold
-        end
-
-        describe '.scaffold' do
-          it 'it should register a new scaffold' do
-            @app.stub(:register_scaffold)
-            @app.should_receive(:register_scaffold)
-            Kernel.scaffold(:new_scaffold) {}
-          end
-        end
-      end
-    end
+    its(:scaffolds) { should be_a Hash }
+    its(:workspace) { should be_a Scaffoldish::DSL::Conf }
   end
 
   describe '#register_scaffold' do
