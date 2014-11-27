@@ -69,7 +69,7 @@ describe Scaffoldish::Application do
 
       describe 'output' do
         it 'should print output on stdout' do
-          STDOUT.should_receive(:write)
+          STDOUT.should_receive(:write).at_least(:once)
           subject.run(:an_existing_scaffold)
         end
 
