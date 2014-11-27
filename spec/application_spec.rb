@@ -26,24 +26,37 @@ describe Scaffoldish::Application do
 
   describe '#run' do
     context 'with an existing scaffold' do
-      before { @app.stub(:scaffolds) { { an_existing_scaffold: nil } } }
+      scaffold = Scaffoldish::Scaffold.new(:an_existing_scaffold) { |*args| args }
+      before do
+        @app.stub(:scaffolds) { { an_existing_scaffold: scaffold } }
+      end
       subject { @app }
 
-      it 'should print output on stdout' do
-        STDOUT.should_receive(:write)
-        subject.run(:an_existing_scaffold)
+      it 'should forward the call on the scaffold' do
+        parameters = [:A, :B, :C]
+        scaffold.should_receive(:run).with(*parameters)
+        subject.run(:an_existing_scaffold, *parameters)
       end
 
-      it 'should not print output on stderr' do
-        subject.logger.should_not_receive(:error)
-        subject.run(:an_existing_scaffold)
+      describe 'output' do
+        it 'should print output on stdout' do
+          STDOUT.should_receive(:write)
+          subject.run(:an_existing_scaffold)
+        end
+
+        it 'should not print output on stderr' do
+          subject.logger.should_not_receive(:error)
+          subject.run(:an_existing_scaffold)
+        end
       end
     end
 
     context 'without an existing scaffold' do
-      it 'should display an error' do
-        subject.logger.should_receive(:error)
-        subject.run(:non_existing_scaffold)
+      describe 'output' do
+        it 'should display an error' do
+          subject.logger.should_receive(:error)
+          subject.run(:non_existing_scaffold)
+        end
       end
     end
   end

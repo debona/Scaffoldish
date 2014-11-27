@@ -22,15 +22,20 @@ module Scaffoldish
     end
 
     def run(*args)
-      scaffold = args.shift
+      scaffold_name = args.shift
 
       # Parameters checking
-      raise OptionParser::MissingArgument.new("$1 => scaffold_name") if scaffold.nil?
-      unless scaffolds.has_key?(scaffold.to_sym)
+      raise OptionParser::MissingArgument.new("$1 => scaffold_name") if scaffold_name.nil?
+      unless scaffolds.has_key?(scaffold_name.to_sym)
         raise OptionParser::InvalidArgument.new("$1 => scaffold_name should be one of the followings: #{scaffolds.keys}")
       end
 
-      puts "Hello world, I'm scaffoldish! Run #{scaffold}"
+      scaffold = scaffolds[scaffold_name.to_sym]
+
+      puts "Run #{scaffold_name}:"
+
+      scaffold.run(*args)
+
     rescue Exception => e
       logger.error e
     end
