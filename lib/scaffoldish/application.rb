@@ -10,9 +10,6 @@ module Scaffoldish
 
     include Singleton
 
-    CONFIG_FILE_NAME = "#{Dir.pwd}/scaffoldish/conf.rb"
-    TEMPLATES_ROOT = "#{Dir.pwd}/scaffoldish/templates"
-
     attr_reader :logger, :scaffolds, :workspace
 
     def initialize
@@ -28,7 +25,17 @@ module Scaffoldish
       scaffolds[scaffold.name] = scaffold
     end
 
+    def load_config
+      config_path = "#{Dir.pwd}/scaffoldish/conf.rb"
+      config = File.open(config_path).read
+
+      workspace.instance_eval(config)
+    end
+
     def run(*args)
+
+      load_config
+
       scaffold_name = args.shift
 
       # Parameters checking

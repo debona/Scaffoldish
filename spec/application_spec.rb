@@ -40,10 +40,23 @@ describe Scaffoldish::Application do
     end
   end
 
+  describe '#load_config' do
+    expected_config = File.open(File.join(File.dirname(__FILE__), 'fixtures', 'example', 'scaffoldish', 'conf.rb')).read
+    before do
+      Dir.stub(:pwd) { File.join(File.dirname(__FILE__), 'fixtures', 'example') }
+    end
+
+    it 'should eval the config file in the workspace' do
+      @app.workspace.should_receive(:instance_eval).with(expected_config)
+      @app.load_config
+    end
+  end
+
   describe '#run' do
     context 'with an existing scaffold' do
       scaffold = Scaffoldish::Scaffold.new(:an_existing_scaffold) { |*args| args }
       before do
+        @app.stub(:load_config)
         @app.stub(:scaffolds) { { an_existing_scaffold: scaffold } }
       end
       subject { @app }
