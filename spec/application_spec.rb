@@ -22,6 +22,36 @@ describe Scaffoldish::Application do
     end
 
     its(:logger) { should be_a Logger }
+
+    describe 'its side-effects' do
+      describe Kernel do
+        it 'it should have the method :scaffold' do
+          Kernel.methods.should include :scaffold
+        end
+
+        describe '.scaffold' do
+          it 'it should register a new scaffold' do
+            @app.stub(:register_scaffold)
+            @app.should_receive(:register_scaffold)
+            Kernel.scaffold(:new_scaffold) {}
+          end
+        end
+      end
+    end
+  end
+
+  describe '#register_scaffold' do
+    expected_scaffold = Scaffoldish::Scaffold.new(:expected_scaffold) {}
+
+    before(:all) do
+      @app.register_scaffold(expected_scaffold)
+    end
+
+    subject { @app.scaffolds }
+
+    it 'should add the registered scaffold in scaffolds' do
+      subject.should include expected_scaffold.name => expected_scaffold
+    end
   end
 
   describe '#run' do

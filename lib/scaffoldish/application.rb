@@ -19,6 +19,15 @@ module Scaffoldish
       @logger.level = Logger::WARN
 
       @scaffolds = {}
+
+      Kernel.send(:define_method, :scaffold) do |name, &block|
+        new_scaffold = Scaffold.new(name.to_sym, &block)
+        Application.instance.register_scaffold(new_scaffold)
+      end
+    end
+
+    def register_scaffold(scaffold)
+      scaffolds[scaffold.name] = scaffold
     end
 
     def run(*args)
