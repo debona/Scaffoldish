@@ -7,7 +7,10 @@ describe Scaffoldish::Application do
     @app = Scaffoldish::Application.instance
   end
 
-  before { STDOUT.stub(:puts) {} }
+  before do # prevent the app to write in the console
+    STDOUT.stub(:write) {}
+    STDERR.stub(:write) {}
+  end
 
   subject { @app }
 
@@ -22,25 +25,25 @@ describe Scaffoldish::Application do
   end
 
   describe '#run' do
-    context 'with a scaffold' do
+    context 'with an existing scaffold' do
+      before { @app.stub(:scaffolds) { { an_existing_scaffold: nil } } }
       subject { @app }
 
       it 'should print output on stdout' do
-        STDOUT.should_receive(:puts)
-        subject.run(:a_scaffold)
+        STDOUT.should_receive(:write)
+        subject.run(:an_existing_scaffold)
       end
 
       it 'should not print output on stderr' do
-        STDERR.stub(:puts) {}
-        STDERR.should_not_receive(:puts)
-        subject.run(:a_scaffold)
+        subject.logger.should_not_receive(:error)
+        subject.run(:an_existing_scaffold)
       end
     end
 
-    context 'without a scaffold' do
+    context 'without an existing scaffold' do
       it 'should display an error' do
         subject.logger.should_receive(:error)
-        subject.run
+        subject.run(:non_existing_scaffold)
       end
     end
   end
