@@ -26,24 +26,11 @@ describe Scaffoldish::Application do
     its(:workspace) { should be_a Scaffoldish::DSL::Conf }
   end
 
-  describe '#register_scaffold' do
-    expected_scaffold = Scaffoldish::Scaffold.new(:expected_scaffold) {}
-
-    before(:all) do
-      @app.register_scaffold(expected_scaffold)
-    end
-
-    subject { @app.scaffolds }
-
-    it 'should add the registered scaffold in scaffolds' do
-      subject.should include expected_scaffold.name => expected_scaffold
-    end
-  end
-
   describe '#load_config' do
     expected_config = File.open(File.join(File.dirname(__FILE__), 'fixtures', 'example', 'Scaffoldable')).read
     before do
       Dir.stub(:pwd) { File.join(File.dirname(__FILE__), 'fixtures', 'example') }
+      @app.workspace.stub(:scaffolds) { {} }
     end
 
     it 'should eval the config file in the workspace' do

@@ -10,19 +10,17 @@ module Scaffoldish
 
     include Singleton
 
-    attr_reader :logger, :scaffolds, :workspace
+    attr_reader :logger, :workspace
+    attr_reader :scaffolds
 
     def initialize
       @logger = Logger.new(STDERR) # TODO: make a module with that
       @logger.level = Logger::WARN
 
-      @scaffolds = {}
       @workspace = Object.new
       @workspace.extend(DSL::Conf)
-    end
 
-    def register_scaffold(scaffold)
-      scaffolds[scaffold.name] = scaffold
+      @scaffolds = {}
     end
 
     def load_config
@@ -30,6 +28,8 @@ module Scaffoldish
       config = File.open(config_path).read
 
       workspace.instance_eval(config)
+
+      @scaffolds = workspace.scaffolds
     end
 
     def run(*args)

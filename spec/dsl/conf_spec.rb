@@ -13,11 +13,30 @@ describe Scaffoldish::DSL::Conf do
   subject { @workspace }
 
   describe '#scaffold' do
-    it 'it should register a new scaffold' do
-      Scaffoldish::Application.instance.stub(:register_scaffold)
-      Scaffoldish::Application.instance.should_receive(:register_scaffold)
-      subject.scaffold(:new_scaffold) {}
+    expected_block = Proc.new {}
+
+    before(:all) do
+      @workspace.scaffold(:expected_name, &expected_block)
     end
+
+    describe '#scaffolds' do
+      subject { @workspace.scaffolds }
+
+      it { should have_key :expected_name }
+      its(:count) { should == 1 }
+
+      describe 'registered scaffold' do
+        subject { @workspace.scaffolds[:expected_name] }
+
+        it { should be_a Scaffoldish::Scaffold }
+
+        its(:name) { should == :expected_name }
+        its(:block) { should == expected_block }
+      end
+
+    end
+
+
   end
 
 

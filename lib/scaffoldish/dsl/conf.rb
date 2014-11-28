@@ -1,5 +1,5 @@
 
-require 'scaffoldish/application'
+require 'scaffoldish/scaffold'
 
 module Scaffoldish
 
@@ -7,9 +7,11 @@ module Scaffoldish
 
     module Conf
 
+      attr_reader :scaffolds
+
       def scaffold(name, &block)
-        new_scaffold = Scaffold.new(name.to_sym, &block)
-        Application.instance.register_scaffold(new_scaffold)
+        @scaffolds ||= {}
+        @scaffolds[name.to_sym] = Scaffold.new(name.to_sym, &block)
       end
 
     end
