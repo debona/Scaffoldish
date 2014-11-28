@@ -41,7 +41,7 @@ describe Scaffoldish::Application do
   end
 
   describe '#load_config' do
-    expected_config = File.open(File.join(File.dirname(__FILE__), 'fixtures', 'example', 'scaffoldish', 'conf.rb')).read
+    expected_config = File.open(File.join(File.dirname(__FILE__), 'fixtures', 'example', 'Scaffoldable')).read
     before do
       Dir.stub(:pwd) { File.join(File.dirname(__FILE__), 'fixtures', 'example') }
     end

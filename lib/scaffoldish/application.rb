@@ -26,7 +26,7 @@ module Scaffoldish
     end
 
     def load_config
-      config_path = "#{Dir.pwd}/scaffoldish/conf.rb"
+      config_path = "#{Dir.pwd}/Scaffoldable"
       config = File.open(config_path).read
 
       workspace.instance_eval(config)
