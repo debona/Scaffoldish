@@ -27,15 +27,23 @@ describe Scaffoldish::Application do
   end
 
   describe '#load_config' do
-    expected_config = File.open(File.join(File.dirname(__FILE__), 'fixtures', 'example', 'Scaffoldable')).read
-    before do
-      Dir.stub(:pwd) { File.join(File.dirname(__FILE__), 'fixtures', 'example') }
-      @app.workspace.stub(:scaffolds) { {} }
-    end
+    pwd = File.join(File.dirname(__FILE__), 'fixtures', 'example')
+    expected_config = File.open(File.join(pwd, 'Scaffoldable')).read
+    expected_scaffolfds = { expected: nil }
 
-    it 'should eval the config file in the workspace' do
+    before { Dir.stub(:pwd) { pwd } }
+    after { @app.instance_eval { @scaffolds = {} } } # clean the app scaffolds
+
+    it 'should eval the config file in the workspace clean room' do
       @app.workspace.should_receive(:instance_eval).with(expected_config)
       @app.load_config
+    end
+
+    it 'should apply the workspace config' do
+      @app.workspace.stub(:instance_eval) # avoid to effectively load the config from file
+      @app.workspace.stub(:scaffolds) { expected_scaffolfds } # manually set test config
+      @app.load_config
+      @app.scaffolds.should == expected_scaffolfds
     end
   end
 
@@ -43,8 +51,8 @@ describe Scaffoldish::Application do
     context 'with an existing scaffold' do
       scaffold = Scaffoldish::Scaffold.new(:an_existing_scaffold) { |*args| args }
       before do
-        @app.stub(:load_config)
-        @app.stub(:scaffolds) { { an_existing_scaffold: scaffold } }
+        @app.stub(:load_config) # shortcut load config
+        @app.stub(:scaffolds) { { an_existing_scaffold: scaffold } } # manually set test config
       end
       subject { @app }
 
