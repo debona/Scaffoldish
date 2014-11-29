@@ -10,13 +10,10 @@ module Scaffoldish
 
     include Singleton
 
-    attr_reader :logger, :workspace
+    attr_reader :workspace
     attr_reader :scaffolds
 
     def initialize
-      @logger = Logger.new(STDERR) # TODO: make a module with that
-      @logger.level = Logger::WARN
-
       @workspace = Object.new
       @workspace.extend(DSL::Conf)
 
@@ -49,9 +46,6 @@ module Scaffoldish
       puts "Run #{scaffold_name}:"
 
       scaffold.run(*args)
-
-    rescue Exception => e
-      logger.error e
     end
 
   end

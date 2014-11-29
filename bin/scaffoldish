@@ -2,6 +2,16 @@
 
 require 'scaffoldish'
 
-# TODO include the logger method?
+logger = Logger.new(STDERR)
+logger.level = Logger::WARN
 
-Scaffoldish::Application.instance.run(*ARGV)
+Kernel.send(:define_method, :logger) do
+  logger
+end
+
+begin
+  Scaffoldish::Application.instance.run(*ARGV)
+rescue Exception => e
+  logger.error 'Scaffoldish crashed'
+  logger.error e
+end
