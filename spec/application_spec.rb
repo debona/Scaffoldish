@@ -21,8 +21,13 @@ describe Scaffoldish::Application do
       subject.should == Scaffoldish::Application.instance
     end
 
-    its(:scaffolds) { should be_a Hash }
     its(:workspace) { should be_a Scaffoldish::DSL::Conf }
+
+    describe 'defaul values' do
+      its(:scaffolds) { should == {} }
+      its(:project_root) { should == Dir.pwd }
+      its(:templates_root) { should == File.join(Dir.pwd, 'templates') }
+    end
   end
 
   describe '#load_config' do

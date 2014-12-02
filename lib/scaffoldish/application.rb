@@ -11,13 +11,15 @@ module Scaffoldish
     include Singleton
 
     attr_reader :workspace
-    attr_reader :scaffolds
+    attr_reader :scaffolds, :project_root, :templates_root
 
     def initialize
       @workspace = Object.new
       @workspace.extend(DSL::Conf)
 
       @scaffolds = {}
+      @project_root = Dir.pwd
+      @templates_root = File.join(@project_root, 'templates')
     end
 
     def load_config
@@ -26,7 +28,9 @@ module Scaffoldish
 
       workspace.instance_eval(config)
 
-      @scaffolds = workspace.scaffolds
+      @scaffolds = workspace.scaffolds || @scaffolds
+      @project_root = workspace.project_root || @project_root
+      @templates_root = workspace.templates_root || @templates_root
     end
 
     def run(*args)
