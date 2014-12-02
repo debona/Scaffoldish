@@ -3,18 +3,15 @@ require 'spec_helper'
 require 'scaffoldish/application'
 
 describe Scaffoldish::Application do
-  before(:all) do
-    @app = Scaffoldish::Application.instance
-  end
 
   before do # prevent the app to write in the console
-    STDOUT.stub(:write) {}
-    STDERR.stub(:write) {}
+    # STDOUT.stub(:write) {}
+    # STDERR.stub(:write) {}
   end
 
-  subject { @app }
-
   describe '.instance' do
+    subject { Scaffoldish::Application.instance }
+
     it { should_not be_nil }
 
     it 'should always return the same instance' do
@@ -31,36 +28,58 @@ describe Scaffoldish::Application do
   end
 
   describe '#load_config' do
+    before(:all) { @app = Scaffoldish::Application.send(:new) } # work on a clean non-shared instance
+
     pwd = File.join(File.dirname(__FILE__), 'fixtures', 'example')
     expected_config = File.open(File.join(pwd, 'Scaffoldable')).read
-    expected_scaffolfds = { expected: nil }
 
     before { Dir.stub(:pwd) { pwd } }
-    after { @app.instance_eval { @scaffolds = {} } } # clean the app scaffolds
 
     it 'should eval the config file in the workspace clean room' do
       @app.workspace.should_receive(:instance_eval).with(expected_config)
       @app.load_config
     end
 
-    it 'should apply the workspace config' do
-      @app.workspace.stub(:instance_eval) # avoid to effectively load the config from file
-      @app.workspace.stub(:scaffolds) { expected_scaffolfds } # manually set test config
-      @app.load_config
-      @app.scaffolds.should == expected_scaffolfds
+    describe 'workspace config' do
+      workspace = OpenStruct.new
+      settings = [
+        :scaffolds,
+        :project_root,
+        :templates_root
+      ]
+
+      before do
+        @app.stub(:workspace) { workspace }
+        workspace.stub(:instance_eval) # avoid to effectively load the config from file
+        settings.each { |setting| workspace[setting] = setting } # manually set test config
+
+        @app.load_config
+      end
+
+      settings.each do |setting|
+        it "should apply the #{setting} setting" do
+          @app.send(setting).should_not be_nil
+          @app.send(setting).should == workspace.send(setting)
+        end
+      end
     end
   end
 
   describe '#run' do
+    before(:all) do
+      @app = Scaffoldish::Application.send(:new) # work on a clean non-shared instance
+    end
+
     before do
       @app.stub(:load_config) # shortcut load config
       @app.stub(:scaffolds) { { } } # manually set test config
     end
 
+    subject { @app }
+
     context 'with an existing scaffold' do
       scaffold = Scaffoldish::Scaffold.new(:an_existing_scaffold) { |*args| args }
       before { @app.stub(:scaffolds) { { an_existing_scaffold: scaffold } } } # manually set test config
-      subject { @app }
 
       it 'should forward the call on the scaffold' do
         parameters = [:A, :B, :C]
@@ -71,7 +90,7 @@ describe Scaffoldish::Application do
 
     context 'with a non-existing scaffold' do
       it 'should raise a OptionParser::InvalidArgument' do
-        expect { subject.run(:non_existing_scaffold) }.to raise_error(OptionParser::InvalidArgument)
+        expect { @app.run(:non_existing_scaffold) }.to raise_error(OptionParser::InvalidArgument)
       end
     end
 

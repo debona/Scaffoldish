@@ -35,7 +35,19 @@ describe Scaffoldish::DSL::Conf do
       end
 
     end
+  end
 
+  describe 'attributes' do
+
+    it 'its project_root should be settable' do
+      subject.project_root = :project_root_value
+      subject.project_root.should == :project_root_value
+    end
+
+    it 'its templates_root should be settable' do
+      subject.templates_root = :templates_root_value
+      subject.templates_root.should == :templates_root_value
+    end
 
   end
 

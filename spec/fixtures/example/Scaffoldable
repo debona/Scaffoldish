@@ -1,6 +1,9 @@
 
 # require 'byebug'; byebug
 
+project_root = File.dirname(__FILE__)
+templates_root = File.join(project_root, 'templates')
+
 sccafold :endpoint do |name|
   name = name.capitalize
 
