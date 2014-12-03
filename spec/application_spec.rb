@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+require 'ostruct'
+
 require 'scaffoldish/application'
 
 describe Scaffoldish::Application do
