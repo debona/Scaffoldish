@@ -34,6 +34,17 @@ module Scaffoldish
       end
     end
 
+    def chunk(template_path, output_path, data)
+      template = File.read(File.join(Application.instance.templates_root, template_path))
+      renderer = ERB.new(template)
+
+      result = renderer.result(data.instance_eval { binding })
+
+      puts "Edit #{output_path}:"
+      puts result
+      puts ""
+    end
+
   end
 
 end
