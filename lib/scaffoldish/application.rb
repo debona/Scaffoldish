@@ -23,8 +23,14 @@ module Scaffoldish
     end
 
     def load_config
-      config_path = "#{Dir.pwd}/Scaffoldable"
-      config = File.open(config_path).read
+      config_filename = 'Scaffoldable'
+      config_path = Dir.pwd
+
+      while config_path != '/' && !File.exist?(File.join(config_path, config_filename))
+        config_path = File.expand_path("..", config_path)
+      end
+
+      config = File.read(File.join(config_path, config_filename))
 
       workspace.instance_eval(config)
 

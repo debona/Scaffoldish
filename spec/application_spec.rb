@@ -37,6 +37,11 @@ describe Scaffoldish::Application do
 
     before { Dir.stub(:pwd) { pwd } }
 
+    it 'should lookup in parent dirs until it find the config file' do
+      Dir.stub(:pwd) { File.join(pwd, 'templates') }
+      @app.load_config
+    end
+
     it 'should eval the config file in the workspace clean room' do
       @app.workspace.should_receive(:instance_eval).with(expected_config)
       @app.load_config
