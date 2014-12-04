@@ -58,7 +58,7 @@ describe Scaffoldish::Application do
       before do
         @app.stub(:workspace) { workspace }
         workspace.stub(:instance_eval) # avoid to effectively load the config from file
-        settings.each { |setting| workspace[setting] = setting } # manually set test config
+        settings.each { |setting| workspace.send("#{setting}=", setting) } # manually set test config
 
         @app.load_config
       end
