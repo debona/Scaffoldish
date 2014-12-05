@@ -17,10 +17,10 @@ describe Scaffoldish::Scaffold do
 
   describe '#run' do
     before(:all) do
-      @scaffold = Scaffoldish::Scaffold.new(:scaffold_name) { |*args| args.join(':') }
+      @scaffold = Scaffoldish::Scaffold.new(:scaffold_name) { |*args| args.reverse.join(':') }
     end
-    parameters      = [:A, :B]
-    expected_result = parameters.join(':')
+    parameters      = [:A, :B, :C]
+    expected_result = parameters.reverse.join(':')
 
     subject { @scaffold.run(*parameters) }
 

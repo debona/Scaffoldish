@@ -15,7 +15,7 @@ module Scaffoldish
     end
 
     def run(*args)
-      instance_exec(args, &block)
+      instance_exec(*args, &block)
     end
 
   end
