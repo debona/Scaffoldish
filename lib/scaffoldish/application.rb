@@ -1,5 +1,6 @@
 require 'singleton'
 require 'logger'
+require 'optparse'
 
 require 'scaffoldish/scaffold'
 require 'scaffoldish/dsl/conf'
