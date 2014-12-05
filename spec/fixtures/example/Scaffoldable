@@ -4,27 +4,12 @@ require 'ostruct'
 project_root = File.dirname(__FILE__)
 templates_root = File.join(project_root, 'templates')
 
-sccafold :endpoint do |name|
-  name = name.capitalize
+scaffold :test do |*words|
+  words = words.join(', ')
 
   data = OpenStruct.new()
-  data.name = name
+  data.words = words
 
-  # TODO Generate files with template
-end
-
-sccafold :ws do |endpoint_name, name, method_name, url_path|
-  # if there is no endpoint, fail asking user to run endpoint
-
-  name = name.capitalize
-  endpoint_name = endpoint_name.capitalize
-  method_name = method_name.downcase.to_sym
-
-  data = OpenStruct.new()
-  data.endpoint_name = endpoint_name
-  data.name = name
-  data.method_name = method_name
-  data.url_path = url_path
-
-  # TODO Generate files with template
+  generate('test.txt.erb', 'test.txt', data)
+  chunk('test.txt.erb', 'test.txt', data)
 end
