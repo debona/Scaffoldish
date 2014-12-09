@@ -18,6 +18,11 @@ module Scaffoldish
 
         absolute_output_path = File.join(Application.instance.project_root, output_path)
 
+        if File.exist?(absolute_output_path)
+          puts("Can't generate #{absolute_output_path}, it already exists. Skip it")
+          return
+        end
+
         dir = File.dirname(absolute_output_path)
         FileUtils.mkpath(dir)
 
