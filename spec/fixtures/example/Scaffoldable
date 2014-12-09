@@ -1,7 +1,5 @@
 require 'ostruct'
-# require 'byebug'; byebug
 
-project_root = File.dirname(__FILE__)
 templates_root = File.join(project_root, 'templates')
 
 scaffold :test do |*words|
