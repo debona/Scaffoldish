@@ -32,12 +32,17 @@ module Scaffoldish
       end
 
       config = File.read(File.join(config_path, config_filename))
+      @project_root = config_path
+
+      workspace.scaffolds = @scaffolds
+      workspace.project_root = @project_root
+      workspace.templates_root = @templates_root
 
       workspace.instance_eval(config)
 
-      @scaffolds = workspace.scaffolds || @scaffolds
-      @project_root = workspace.project_root || @project_root
-      @templates_root = workspace.templates_root || @templates_root
+      @scaffolds = workspace.scaffolds
+      @project_root = workspace.project_root
+      @templates_root = workspace.templates_root
     end
 
     def run(*args)
